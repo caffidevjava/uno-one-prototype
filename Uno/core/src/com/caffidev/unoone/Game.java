@@ -24,6 +24,7 @@ public class Game extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		framerate = new Framerate();
 		background = new Texture("background.jpg");
+		Player player = new Player("Кеша");
 	}
 	
 	@Override
@@ -39,7 +40,7 @@ public class Game extends ApplicationAdapter {
 
 		batch.begin();
 		batch.draw(background, 0, 0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+		
 		batch.end();
 
 		framerate.renderWithUpdate();
