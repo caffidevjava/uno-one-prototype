@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import org.w3c.dom.Text;
 
 public class Game extends ApplicationAdapter {
+	public static final Logger logger = new Logger("Uno-one");
 	protected Framerate framerate;
 	protected SpriteBatch batch;
 	protected Texture background;
@@ -24,7 +25,13 @@ public class Game extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		framerate = new Framerate();
 		background = new Texture("background.jpg");
+		
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		logger.setLevel(Logger.DEBUG);
+		logger.debug("Logger was instantiated.");
+		
 		Player player = new Player("Кеша");
+		logger.debug("Created player with UUID "+ player.getUuid().toString());
 	}
 	
 	@Override

@@ -1,6 +1,8 @@
 package com.caffidev.unoone;
 
-public class Player {
+import com.caffidev.unoone.abstracts.Entity;
+
+public class Player extends Entity {
     private final String name;
     
     public Player(String name) {
