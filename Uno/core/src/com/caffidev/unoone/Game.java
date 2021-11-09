@@ -15,11 +15,15 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import org.w3c.dom.Text;
 
 public class Game extends ApplicationAdapter {
-
 	protected Framerate framerate;
+	protected SpriteBatch batch;
+	protected Texture background;
+	
 	@Override
 	public void create(){
+		batch = new SpriteBatch();
 		framerate = new Framerate();
+		background = new Texture("background.jpg");
 	}
 	
 	@Override
@@ -32,7 +36,12 @@ public class Game extends ApplicationAdapter {
 		// Clean screen
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
+		batch.begin();
+		batch.draw(background, 0, 0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		batch.end();
+
 		framerate.renderWithUpdate();
 
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){ Gdx.app.exit();}
