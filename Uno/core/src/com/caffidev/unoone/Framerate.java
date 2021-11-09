@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class Framerate implements Disposable {
     long lastTimeCounted;
     private float sinceChange;
-    private float frameRate;
+    private float framerate;
     private BitmapFont font;
     private SpriteBatch batch;
     private OrthographicCamera cam;
@@ -18,7 +18,7 @@ public class Framerate implements Disposable {
     public Framerate(){
         lastTimeCounted = TimeUtils.millis();
         sinceChange = 0;
-        frameRate = Gdx.graphics.getFramesPerSecond();
+        framerate = Gdx.graphics.getFramesPerSecond();
         font = new BitmapFont();
         batch = new SpriteBatch();
         cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -44,13 +44,13 @@ public class Framerate implements Disposable {
         sinceChange += delta;
         if(sinceChange >= 1000) {
             sinceChange = 0;
-            frameRate = Gdx.graphics.getFramesPerSecond();
+            framerate = Gdx.graphics.getFramesPerSecond();
         }
     }
 
     public void render() {
         batch.begin();
-        font.draw(batch, "Debug:\n"+(int)frameRate + " fps", 3, Gdx.graphics.getHeight() - 3);
+        font.draw(batch, "Debug:\n"+(int)framerate + " fps", 3, Gdx.graphics.getHeight() - 3);
         batch.end();
     }
 
