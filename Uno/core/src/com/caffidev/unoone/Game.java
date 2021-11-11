@@ -12,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import org.w3c.dom.Text;
-
 import java.util.UUID;
 
 public class Game extends ApplicationAdapter {
@@ -34,8 +32,8 @@ public class Game extends ApplicationAdapter {
 		logger.setLevel(Logger.DEBUG);
 		logger.debug("Logger was instantiated.");
 		
-		GameCardService service = new GameCardService(1);
-		UUID playerId = service.buildGame().getPlayers().get(0).getUuid();
+		GameCardService service = new GameCardService("Hello", "World");
+		UUID playerId = service.getCurrentPlayer().getUuid();
 		service.drawCard(playerId);
 	}
 	

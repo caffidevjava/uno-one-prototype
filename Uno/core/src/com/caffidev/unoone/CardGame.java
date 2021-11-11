@@ -9,22 +9,26 @@ import java.util.List;
 import java.util.UUID;
 
 public class CardGame extends Entity {
-    private final List<Player> players;
+    private final PlayerRoundDirector players;
+    
     private CardPack pack;
     
-    public CardGame(List<Player> players, CardPack pack){
+    public CardGame(PlayerRoundDirector players, CardPack pack){
         super();
         this.players = players;
         this.pack = pack;
     }
     
-    public List<Player> getPlayers() {
+    public PlayerRoundDirector getPlayers() {
         return players;
     }
     
+    public ImmutablePlayer getCurrentPlayer() { return players.getCurrentPlayer().toImmutable();}
+    
     public void drawCard(UUID playerId){
-        // We don't use playerId right now
-        Card drawnCard = drawCards(players.get(0), 1).get(0);
+        if(getCurrentPlayer().getUuid().equals(playerId)) {
+            Card drawnCard = drawCards(players.getPlayerByUuid(playerId), 1).get(0);
+        }
     }
     
     private List<Card> drawCards(Player player, int amount){

@@ -20,4 +20,8 @@ public class Player extends Entity {
     public void addToHandCards(Card card) {
         handList.addCard(card);
     }
+
+    public ImmutablePlayer toImmutable() {
+        return new ImmutablePlayer(this);
+    }
 }
