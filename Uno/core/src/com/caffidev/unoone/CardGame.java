@@ -2,11 +2,11 @@ package com.caffidev.unoone;
 
 import com.caffidev.unoone.abstracts.Card;
 import com.caffidev.unoone.abstracts.Entity;
-import com.sun.tools.javac.tree.JCTree;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class CardGame extends Entity {
     private final PlayerRoundDirector players;
@@ -19,8 +19,11 @@ public class CardGame extends Entity {
         this.pack = pack;
     }
     
-    public PlayerRoundDirector getPlayers() {
-        return players;
+    public Stream<ImmutablePlayer> getPlayers() {
+        return players.stream().map(Player::toImmutable);
+    }
+    public Stream<Card> getHandCards(UUID playerId) {
+        return players.getPlayerByUuid(playerId).getHandList();
     }
     
     public ImmutablePlayer getCurrentPlayer() { return players.getCurrentPlayer().toImmutable();}

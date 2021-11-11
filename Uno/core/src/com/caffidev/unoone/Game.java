@@ -33,8 +33,8 @@ public class Game extends ApplicationAdapter {
 		logger.debug("Logger was instantiated.");
 		
 		GameCardService service = new GameCardService("Hello", "World");
-		UUID playerId = service.getCurrentPlayer().getUuid();
-		service.drawCard(playerId);
+		UUID playerId1 = service.getCurrentPlayer().getUuid();
+		service.drawCard(playerId1);
 	}
 	
 	@Override

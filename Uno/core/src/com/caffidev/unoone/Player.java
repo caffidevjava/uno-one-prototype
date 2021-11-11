@@ -3,6 +3,8 @@ package com.caffidev.unoone;
 import com.caffidev.unoone.abstracts.Card;
 import com.caffidev.unoone.abstracts.Entity;
 
+import java.util.stream.Stream;
+
 public class Player extends Entity {
     private final String name;
     private final HandList handList;
@@ -15,7 +17,7 @@ public class Player extends Entity {
     
     public String getName() { return name; }
     
-    public HandList getHandList() { return this.handList;}
+    public Stream<Card> getHandList() { return this.handList.getCardStream();}
     
     public void addToHandCards(Card card) {
         handList.addCard(card);

@@ -2,7 +2,9 @@ package com.caffidev.unoone;
 
 import com.caffidev.unoone.enums.GameDirection;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 
 public class PlayerRoundDirector {
@@ -12,6 +14,10 @@ public class PlayerRoundDirector {
     
     public PlayerRoundDirector(Player[] players){
         this.players = players;
+    }
+
+    public Stream<Player> stream() {
+        return Arrays.stream(players);
     }
     
     public Player getCurrentPlayer() {

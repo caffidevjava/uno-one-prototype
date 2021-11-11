@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.lang.model.element.VariableElement;
 
 public class GameCardService {
     private final CardGame game;
@@ -37,12 +40,17 @@ public class GameCardService {
     
     public void drawCard(UUID playerId) {
         game.drawCard(playerId);
-        Game.logger.info("Player " + game.getPlayers().getPlayerByUuid(playerId).getName() + " draws a card.");
     } 
     private void logCreationOfGame() {
         Game.logger.info("Game was created successfully.");
         // We can't see cards of all players now.
-        Game.logger.info(game.getCurrentPlayer().getHandList().toString());
+        game.getPlayers().forEach(players -> {
+            String joinedCardValues = players.getHandList()
+                    .map(Object::toString)
+                    .collect(Collectors.joining(","));
+
+            Game.logger.debug(String.format("Player "+ players.getName() + " with "+ players.getTotalCards() + " cards => ["+joinedCardValues+"]"));
+        });
     }
     
     private PlayerRoundDirector buildPlayers(CardPack pack) {

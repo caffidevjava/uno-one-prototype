@@ -1,6 +1,9 @@
 package com.caffidev.unoone;
 
+import com.caffidev.unoone.abstracts.Card;
+
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class ImmutablePlayer {
     private final Player player;
@@ -11,7 +14,7 @@ public class ImmutablePlayer {
     
     public String getName() { return player.getName();}
     
-    public HandList getHandList() { return player.getHandList(); }
+    public Stream<Card> getHandList() { return player.getHandList(); }
     
-    public int getTotalCards() { return (int) getHandList().size();}
+    public int getTotalCards() { return (int) getHandList().count();}
 }
