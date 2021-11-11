@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.lang.model.element.VariableElement;
 
@@ -38,9 +39,18 @@ public class GameCardService {
         return game.getCurrentPlayer();
     }
     
+    public List<ImmutablePlayer> GetPlayerInformation(){
+        return game.getPlayers().collect(Collectors.toList());
+    }
+    
     public void drawCard(UUID playerId) {
         game.drawCard(playerId);
     } 
+    
+    public Stream<Card> getHandCards(UUID playerId) {
+        return game.getHandCards(playerId);
+    }
+    
     private void logCreationOfGame() {
         Game.logger.info("Game was created successfully.");
         // We can't see cards of all players now.
