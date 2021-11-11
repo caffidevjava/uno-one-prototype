@@ -22,13 +22,16 @@ public abstract class Card extends ImageButton {
         cardColor = color;
         cardNumber = number;
     }
-
+    
     public CardType getCardType() {return cardType;}
 
     public CardColor getCardColor() {return cardColor;}
 
     public Integer getCardNumber() {return cardNumber;}
-
+    
+    @Override
+    public abstract String toString();
+    
     //Static i.e has instance
     private static String getTexturePath(CardType type, CardColor color, Integer number){
         // Wildcards

@@ -13,6 +13,9 @@ import javax.lang.model.element.VariableElement;
 public class GameCardService {
     private final CardGame game;
     private Integer amountOfPlayers;
+    
+    public static final int INITIAL_HAND_CARDS = 7;
+    
     public GameCardService(int amountOfPlayers){
         this.amountOfPlayers = amountOfPlayers;
         game = buildGame();
@@ -24,7 +27,7 @@ public class GameCardService {
         Collections.shuffle(basicDeck);
         CardPack pack = new CardPack(basicDeck);
         
-        List<Player> players = buildPlayers();
+        List<Player> players = buildPlayers(pack);
         
         return new CardGame(players, pack);
     }
@@ -33,12 +36,28 @@ public class GameCardService {
         game.drawCard(playerId);
     } 
     
-    private List<Player> buildPlayers() {
+    private List<Player> buildPlayers(CardPack pack) {
         List<Player> players = new ArrayList<Player>() {
         };
         for (Integer i = 0; i<amountOfPlayers; i++) {
-            players.add(new Player("Player" + i.toString()));
+        players.add(new Player("Player" + i.toString(), giveInitialHandCards(pack)));
         }
         return players;
+    }
+    
+    private HandList[] giveInitialHandCards(CardPack pack, int amountOfPlayers) {
+        HandList[] handLists = new HandList[amountOfPlayers];
+        for(int player = 0; player < amountOfPlayers; player++) {
+            handLists[player] = giveInitialHandCards(pack);
+        }
+        return handLists;
+    }
+    
+    private HandList giveInitialHandCards(CardPack pack) {
+        HandList handList = new HandList();
+        for (int i = 0; i < INITIAL_HAND_CARDS; i++) {
+            handList.addCard(pack.drawCard());
+        }
+        return handList;
     }
 }

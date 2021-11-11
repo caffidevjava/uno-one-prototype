@@ -33,7 +33,8 @@ public class CardGame extends Entity {
         for (int i = 0; i < amount; i++) {
             Card drawnCard = pack.drawCard();
             drawnCards.add(drawnCard);
-            Game.logger.debug("Drawn card with color "+drawnCard.getCardColor());
+            player.addToHandCards(drawnCard);
+            Game.logger.debug("Drawn "+ drawnCard.toString());
         }
         return drawnCards;
     }
