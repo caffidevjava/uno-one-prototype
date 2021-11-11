@@ -15,12 +15,12 @@ public class Framerate implements Disposable {
     private SpriteBatch batch;
     private OrthographicCamera cam;
 
-    public Framerate(){
+    public Framerate(SpriteBatch batch){
         lastTimeCounted = TimeUtils.millis();
         sinceChange = 0;
+        this.batch = batch;
         framerate = Gdx.graphics.getFramesPerSecond();
         font = new BitmapFont();
-        batch = new SpriteBatch();
         cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
     }

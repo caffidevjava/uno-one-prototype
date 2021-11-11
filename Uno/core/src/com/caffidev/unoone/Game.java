@@ -23,7 +23,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void create(){
 		batch = new SpriteBatch();
-		framerate = new Framerate();
+		framerate = new Framerate(batch);
 		background = new Texture("background.jpg");
 		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -47,7 +47,6 @@ public class Game extends ApplicationAdapter {
 
 		batch.begin();
 		batch.draw(background, 0, 0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
 		batch.end();
 
 		framerate.renderWithUpdate();
