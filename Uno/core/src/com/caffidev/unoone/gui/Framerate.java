@@ -1,4 +1,4 @@
-package com.caffidev.unoone;
+package com.caffidev.unoone.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;

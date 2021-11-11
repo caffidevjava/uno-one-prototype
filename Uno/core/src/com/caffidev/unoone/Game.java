@@ -8,9 +8,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Logger;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.caffidev.unoone.gui.Framerate;
 
 import java.util.UUID;
 
@@ -49,7 +48,7 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.begin();
-		batch.draw(background, 0, 0,Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 1.6f,1.6f,rotation);
+		batch.draw(background, 0, 0,Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 2f,2f,rotation);
 		batch.end();
 		
 		rotation += rotationSpeed * Gdx.graphics.getDeltaTime();
