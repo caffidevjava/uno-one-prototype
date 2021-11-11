@@ -28,7 +28,7 @@ public class CardDeck {
         Game.logger.debug("Created a starter deck of cards.");
     }
 
-    public List<Card> getCards() {
+    public List<Card> getImmutableCards() {
         return cards;
     }
 

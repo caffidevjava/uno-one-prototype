@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import org.w3c.dom.Text;
 
+import java.util.UUID;
+
 public class Game extends ApplicationAdapter {
 	public static final Logger logger = new Logger("Uno-one");
 	protected Framerate framerate;
@@ -32,8 +34,9 @@ public class Game extends ApplicationAdapter {
 		logger.setLevel(Logger.DEBUG);
 		logger.debug("Logger was instantiated.");
 		
-		Player player = new Player("Кеша");
-		logger.debug("Created player with UUID "+ player.getUuid().toString());
+		GameCardService service = new GameCardService(1);
+		UUID playerId = service.buildGame().getPlayers().get(0).getUuid();
+		service.drawCard(playerId);
 	}
 	
 	@Override
