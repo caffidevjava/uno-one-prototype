@@ -18,13 +18,15 @@ public class Game extends ApplicationAdapter {
 	public static final Logger logger = new Logger("Uno-one");
 	protected Framerate framerate;
 	protected SpriteBatch batch;
-	protected Texture background;
-	
+	protected TextureRegion background;
+	protected float rotation;
+	protected float rotationSpeed = 5;
 	@Override
 	public void create(){
 		batch = new SpriteBatch();
+		rotation = 0;
 		framerate = new Framerate(batch);
-		background = new Texture("background.jpg");
+		background = new TextureRegion(new Texture("background.jpg"));
 		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		logger.setLevel(Logger.DEBUG);
@@ -44,11 +46,12 @@ public class Game extends ApplicationAdapter {
 		// Clean screen
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		
 		batch.begin();
-		batch.draw(background, 0, 0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(background, 0, 0,Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 1.6f,1.6f,rotation);
 		batch.end();
-
+		
+		rotation += rotationSpeed * Gdx.graphics.getDeltaTime();
 		framerate.renderWithUpdate();
 
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){ Gdx.app.exit();}
