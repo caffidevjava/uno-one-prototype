@@ -8,18 +8,27 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Logger;
 import com.caffidev.unoone.gui.Framerate;
+import com.caffidev.unoone.gui.PlayerView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Game extends ApplicationAdapter {
 	public static final Logger logger = new Logger("Uno-one");
+	GameCardService gameService;
+	protected List<PlayerView> playerViews;
 	protected Framerate framerate;
 	protected SpriteBatch batch;
 	protected TextureRegion background;
 	protected float rotation;
 	protected float rotationSpeed = 5;
+	
+	Stage stage;
+	
 	@Override
 	public void create(){
 		batch = new SpriteBatch();
@@ -27,13 +36,17 @@ public class Game extends ApplicationAdapter {
 		framerate = new Framerate(batch);
 		background = new TextureRegion(new Texture("background.jpg"));
 		
+		stage = new Stage();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		logger.setLevel(Logger.DEBUG);
 		logger.debug("Logger was instantiated.");
 		
-		GameCardService service = new GameCardService("Hello", "World");
-		UUID playerId1 = service.getCurrentPlayer().getUuid();
-		service.drawCard(playerId1);
+		gameService = new GameCardService("Hello", "World");
+		
+		playerViews = new ArrayList<>();
+		for(ImmutablePlayer player : gameService.GetPlayerInformation()) {
+			playerViews.add(new PlayerView(stage, gameService.GetPlayerInformation().get(0), gameService));
+		}
 	}
 	
 	@Override
@@ -50,7 +63,13 @@ public class Game extends ApplicationAdapter {
 		batch.begin();
 		batch.draw(background, 0, 0,Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 2f,2f,rotation);
 		batch.end();
-		
+
+		stage.act(Gdx.graphics.getDeltaTime());
+		stage.draw();
+
+		for (PlayerView playerView : playerViews) {
+			playerView.update();
+		}
 		rotation += rotationSpeed * Gdx.graphics.getDeltaTime();
 		framerate.renderWithUpdate();
 
