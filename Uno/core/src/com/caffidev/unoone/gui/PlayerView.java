@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayerView {
-    protected HorizontalGroup horizontalGroup;
+    public HorizontalGroup horizontalGroup;
     protected List<Card> cards;
     protected final ImmutablePlayer player;
     protected final GameCardService service;
@@ -27,7 +27,7 @@ public class PlayerView {
         this.player = player;
         this.service = service;
 
-        horizontalGroup.setPosition(Gdx.graphics.getWidth() / 2f - 250, 50);
+        horizontalGroup.setPosition(stage.getWidth() / 2f - 60 , 50);
     }
     
     public void update() {

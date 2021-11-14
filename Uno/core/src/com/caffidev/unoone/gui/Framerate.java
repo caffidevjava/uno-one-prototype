@@ -1,40 +1,32 @@
 package com.caffidev.unoone.gui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.caffidev.unoone.Game;
 
-public class Framerate implements Disposable {
+public class Framerate {
+    private Label label;
     long lastTimeCounted;
     private float sinceChange;
     private float framerate;
-    private BitmapFont font;
-    private SpriteBatch batch;
-    private OrthographicCamera cam;
 
-    public Framerate(SpriteBatch batch){
+    public Framerate(BitmapFont font, Stage stage){
+        label = new Label("0 fps", new Label.LabelStyle(font, Color.WHITE));
+        label.setPosition(3f, stage.getHeight()-30f);
+        label.toFront();
+        stage.addActor(label);
         lastTimeCounted = TimeUtils.millis();
         sinceChange = 0;
-        this.batch = batch;
         framerate = Gdx.graphics.getFramesPerSecond();
-        font = new BitmapFont();
-        cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-    }
-
-    public void resize(int screenWidth, int screenHeight){
-        cam = new OrthographicCamera(screenWidth, screenHeight);
-        cam.translate(screenWidth /2, screenHeight /2 );
-        cam.update();
-        batch.setProjectionMatrix(cam.combined);
-    }
-    
-    public void renderWithUpdate(){
-        update();
-        render();
     }
     
     public void update() {
@@ -46,16 +38,6 @@ public class Framerate implements Disposable {
             sinceChange = 0;
             framerate = Gdx.graphics.getFramesPerSecond();
         }
-    }
-
-    public void render() {
-        batch.begin();
-        font.draw(batch, "Debug:\n"+(int)framerate + " fps", 3, Gdx.graphics.getHeight() - 3);
-        batch.end();
-    }
-
-    public void dispose() {
-        font.dispose();
-        batch.dispose();
+        label.setText("Debug:\n"+(int)framerate + " fps");
     }
 }
