@@ -34,6 +34,10 @@ public class CardGame extends Entity {
         }
     }
     
+    public Integer getCardCount() {
+        return pack.getCount();
+    }
+    
     private List<Card> drawCards(Player player, int amount){
         // Cards that we will give away
         List<Card> drawnCards = new ArrayList<Card>();

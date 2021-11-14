@@ -16,4 +16,6 @@ public class CardPack {
     public Card drawCard() {
         return cards.pop();
     }
+    
+    public Integer getCount() { return cards.size();}
 }

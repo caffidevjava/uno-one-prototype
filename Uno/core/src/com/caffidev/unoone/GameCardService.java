@@ -2,15 +2,12 @@ package com.caffidev.unoone;
 
 import com.caffidev.unoone.abstracts.Card;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.lang.model.element.VariableElement;
 
 public class GameCardService {
     private final CardGame game;
@@ -39,13 +36,15 @@ public class GameCardService {
         return game.getCurrentPlayer();
     }
     
-    public List<ImmutablePlayer> GetPlayerInformation(){
+    public List<ImmutablePlayer> getPlayerInformation(){
         return game.getPlayers().collect(Collectors.toList());
     }
     
     public void drawCard(UUID playerId) {
         game.drawCard(playerId);
     } 
+    
+    public Integer getCardCount() { return game.getCardCount();}
     
     public Stream<Card> getHandCards(UUID playerId) {
         return game.getHandCards(playerId);

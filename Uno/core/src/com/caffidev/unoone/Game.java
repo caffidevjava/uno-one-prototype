@@ -4,7 +4,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,23 +15,25 @@ import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.caffidev.unoone.gui.Framerate;
+import com.caffidev.unoone.gui.PackView;
 import com.caffidev.unoone.gui.PlayerView;
 import com.caffidev.unoone.gui.RotatingBackground;
 
-import java.awt.print.PrinterAbortException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Game extends ApplicationAdapter {
 	private static final float MIN_GAME_WIDTH = 960;
 	private static final float MIN_GAME_HEIGHT = 540;
 	private static final float MAX_GAME_WIDTH = 1280;
 	private static final float MAX_GAME_HEIGHT = 720;
+	private static boolean IS_DEBUG = true;
+	private static boolean VSYNC = false;
 	
 	public static final Logger logger = new Logger("Uno-one");
-	GameCardService gameService;
-	protected List<PlayerView> playerViews;
+	protected PackView pack;
+	protected GameCardService gameService;
+	public static List<PlayerView> playerViews;
 	protected Framerate framerate;
 	protected RotatingBackground background;
 	protected SpriteBatch batch;
@@ -51,11 +52,16 @@ public class Game extends ApplicationAdapter {
 		parameter.size = 15;
 		parameter.mono = false;
 		parameter.borderColor.add(Color.BLACK);
-		parameter.borderWidth = 0.4f;
+		parameter.borderWidth = 0.6f;
 		
 		viewport = new ExtendViewport(MIN_GAME_WIDTH, MIN_GAME_HEIGHT, MAX_GAME_WIDTH, MAX_GAME_HEIGHT);
 		batch = new SpriteBatch();
 		stage = new Stage(viewport, batch);
+		
+		Gdx.input.setInputProcessor(stage);
+		
+		stage.setDebugAll(IS_DEBUG);
+		Gdx.graphics.setVSync(VSYNC);
 		
 		//Actors
 		background = new RotatingBackground(new TextureRegion(new Texture("background.jpg")), 5f, stage);
@@ -69,10 +75,13 @@ public class Game extends ApplicationAdapter {
 		gameService = new GameCardService("Hello", "World");
 		
 		playerViews = new ArrayList<>();
-		var players = gameService.GetPlayerInformation();
+		var players = gameService.getPlayerInformation();
 		for(int i = 0; i < players.size(); i++) {
 			playerViews.add(new PlayerView(stage, players.get(i), gameService, (i+1) * 150));
 		}
+		
+		parameter.size = 20;
+		pack = new PackView(stage, gameService, generator.generateFont(parameter));
 	}
 	
 	@Override
@@ -94,8 +103,18 @@ public class Game extends ApplicationAdapter {
 		for (PlayerView playerView : playerViews) {
 			playerView.update();
 		}
-
+		
+		pack.update();
+		
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){ Gdx.app.exit();}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+			IS_DEBUG = !IS_DEBUG;
+			stage.setDebugAll(IS_DEBUG);
+		}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
+			VSYNC = !VSYNC;
+			Gdx.graphics.setVSync(VSYNC);
+		}
 	}
 	
 	@Override
