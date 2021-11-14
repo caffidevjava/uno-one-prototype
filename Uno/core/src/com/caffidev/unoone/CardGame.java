@@ -2,6 +2,7 @@ package com.caffidev.unoone;
 
 import com.caffidev.unoone.abstracts.Card;
 import com.caffidev.unoone.abstracts.Entity;
+import com.caffidev.unoone.enums.CardType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,41 +33,69 @@ public class CardGame extends Entity {
     }
     
     public ImmutablePlayer getCurrentPlayer() { return players.getCurrentPlayer().toImmutable();}
-    
-    public void playCard(UUID playerID, Card playedCard) {
+
+    /** Returns -4, if unknown error
+     *  Returns -3, if card is invalid 
+     *  Returns -2, if owner of playerID is not current player
+     *  Returns -1, if user does not have card
+     *  Returns zero, if successful
+     */
+    public Integer playCard(UUID playerID, Card playedCard) {
+        var currentPlayer = players.getCurrentPlayer();
+        int answer = CardUtils.validatePlayedCard(playerID, currentPlayer, playedCard);
+        if(answer != 0) {
+            return answer;
+        }
+        
         if(getCurrentPlayer().getUuid().equals(playerID)) {
-            // Validation of played card
-            players.getCurrentPlayer().removePlayedCard(playedCard);
-            discard(playedCard);
-            // Uno?
-            // Winner
-            // It's own acceptPlayedCard func?
             switch(playedCard.getCardType()) {
-                case NUMBER, WILD_COLOR -> {
+                case NUMBER-> {
+                    if(!checkNumberCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+                    
                     players.next();
                 }
                 case SKIP -> {
+                    if(!checkActionCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+                    
                     players.next();
                     players.next();
                 }
                 case REVERSE -> {
+                    if(!checkActionCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+                    
                     reverse();
                 }
                 case PLUS_TWO -> {
+                    if(checkActionCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+                    
                     players.next();
                     drawTwoCards(players.getCurrentPlayer());
                     players.next();
                 }
+                case WILD_COLOR -> {
+                    if(checkWildCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+                    
+                    players.next();
+                }
                 case WILD_PLUS_FOUR -> {
+                    if(checkWildCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+                    
                     players.next();
                     drawFourCards(players.getCurrentPlayer());
                     players.next();
                 }
                 default -> {
-                    throw new UnsupportedOperationException("Card always has a type, looks like someone is cheating");
+                    return -4;
                 }
             }
         }
+        return 0;
     }
     
     public void drawCard(UUID playerId){
@@ -113,6 +142,7 @@ public class CardGame extends Entity {
         drawPile.putCard(card);
     }
     
+    
     private void reverse() {
         players.reverseDirection();
         players.next();
@@ -121,6 +151,39 @@ public class CardGame extends Entity {
     private void tryToPlayDrawnCard(UUID playerId, Card drawnCard){
         // play card
         players.next();
+    }
+    
+    private void acceptPlayedCard(Card card){
+        players.getCurrentPlayer().removePlayedCard(card);
+        discard(card);
+    }
+    
+    private Boolean checkNumberCard(Card playedCard){
+        var topCard = drawPile.lastCard();
+        
+        if(isFirstWildCard() || CardUtils.isValidNumberCard(topCard, playedCard)) {
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean checkActionCard(Card playedCard){
+        var topCard = drawPile.lastCard();
+
+        if(isFirstWildCard() || CardUtils.isValidActionCard(topCard, playedCard)) {
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean checkWildCard(Card playedCard){
+        return CardUtils.isValidWildCard(playedCard);
+    }
+    
+    private Boolean isFirstWildCard() {
+        return drawPile.size() == 1 && 
+                (drawPile.lastCard().getCardType() == CardType.WILD_COLOR ||
+                drawPile.lastCard().getCardType() == CardType.WILD_PLUS_FOUR);        
     }
     
     private void drawTwoCards(Player player) {

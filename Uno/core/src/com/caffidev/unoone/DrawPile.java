@@ -27,6 +27,8 @@ public class DrawPile {
         cards.add(card);
     }
     
+    public int size() { return cards.size();}
+    
     public List<Card> reshuffle(){
         Collections.shuffle(cards);
         List<Card> givenCards = cards;

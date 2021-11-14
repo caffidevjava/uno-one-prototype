@@ -12,7 +12,7 @@ public class InfoView {
     protected final GameCardService service;
     
     protected Label turnLabel;
-
+    protected Label errorLabel;
     public InfoView(Stage stage, GameCardService service, BitmapFont font){
         turnLabel = new Label("fallback", new Label.LabelStyle(font, Color.WHITE));
         turnLabel.setPosition(stage.getWidth()/2f - turnLabel.getWidth()/2f , stage.getHeight() / 2f - turnLabel.getHeight() /2f + 150f);
@@ -22,13 +22,17 @@ public class InfoView {
         this.stage = stage;
         this.service = service;
     }
-
+    
+    public void playCardError(Integer errorCode){
+        
+    }
+    
     public void update() {
         turnLabel.setText("It's turn of " + getPlayerName() + "!");
     }
-
+    
     private String getPlayerName() {
         return service.getCurrentPlayer().getName();
     }
-
+    
 }

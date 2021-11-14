@@ -27,6 +27,9 @@ public class Player extends Entity {
         handList.removeCard(card);
     }
     
+    public boolean hasHandCard(Card card) {
+        return this.handList.hasCard(card);
+    }
     public ImmutablePlayer toImmutable() {
         return new ImmutablePlayer(this);
     }
