@@ -22,7 +22,11 @@ public class Player extends Entity {
     public void addToHandCards(Card card) {
         handList.addCard(card);
     }
-
+    
+    public void removePlayedCard(Card card){
+        handList.removeCard(card);
+    }
+    
     public ImmutablePlayer toImmutable() {
         return new ImmutablePlayer(this);
     }
