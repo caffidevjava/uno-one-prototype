@@ -3,6 +3,7 @@ package com.caffidev.unoone.gui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.utils.Align;
 import com.caffidev.unoone.Game;
 import com.caffidev.unoone.GameCardService;
 import com.caffidev.unoone.ImmutablePlayer;
@@ -14,20 +15,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayerView {
+    protected Integer height;
+    protected Stage stage;
     public HorizontalGroup horizontalGroup;
     protected List<Card> cards;
     protected final ImmutablePlayer player;
     protected final GameCardService service;
     
-    public PlayerView(Stage stage, ImmutablePlayer player, GameCardService service){
+    public PlayerView(Stage stage, ImmutablePlayer player, GameCardService service, Integer height){
         horizontalGroup = new HorizontalGroup();
         stage.addActor(horizontalGroup);
         
         cards = new ArrayList<>();
         this.player = player;
         this.service = service;
-
-        horizontalGroup.setPosition(stage.getWidth() / 2f - 60 , 50);
+        
+        this.stage = stage;
+        this.height = height;
     }
     
     public void update() {
@@ -40,6 +44,8 @@ public class PlayerView {
             card.setScale(card.getScaleX(), card.getScaleY());
             horizontalGroup.addActor(card);
         }
+        horizontalGroup.align(Align.center);
+        horizontalGroup.setPosition(stage.getWidth()/2f, height);
     }
     public void playCardFromHand(Card card){
         throw new UnsupportedOperationException("not implemented yet");

@@ -69,8 +69,9 @@ public class Game extends ApplicationAdapter {
 		gameService = new GameCardService("Hello", "World");
 		
 		playerViews = new ArrayList<>();
-		for(ImmutablePlayer player : gameService.GetPlayerInformation()) {
-			playerViews.add(new PlayerView(stage, player, gameService));
+		var players = gameService.GetPlayerInformation();
+		for(int i = 0; i < players.size(); i++) {
+			playerViews.add(new PlayerView(stage, players.get(i), gameService, (i+1) * 150));
 		}
 	}
 	
