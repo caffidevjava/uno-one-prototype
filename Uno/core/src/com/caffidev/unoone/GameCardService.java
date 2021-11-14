@@ -45,6 +45,10 @@ public class GameCardService {
         game.playCard(playerId, card);
     }
     
+    public Card peekTopCard() {
+        return game.getTopCard();
+    }
+    
     public void drawCard(UUID playerId) {
         game.drawCard(playerId);
     } 

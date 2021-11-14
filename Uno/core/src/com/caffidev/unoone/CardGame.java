@@ -59,7 +59,11 @@ public class CardGame extends Entity {
     public Integer getCardCount() {
         return pack.getCount();
     }
-
+    
+    public Card getTopCard(){
+        return drawPile.lastCard();
+    }
+    
     private void startDrawPile() {
         Card card = pack.drawCard();
         switch (card.getCardType()) {
@@ -82,6 +86,7 @@ public class CardGame extends Entity {
             }
         }
     }
+    
     
     private void discard(Card card) {
         drawPile.putCard(card);

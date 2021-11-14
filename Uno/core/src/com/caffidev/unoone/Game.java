@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.caffidev.unoone.gui.DrawPileView;
 import com.caffidev.unoone.gui.Framerate;
 import com.caffidev.unoone.gui.PackView;
 import com.caffidev.unoone.gui.PlayerView;
@@ -33,6 +34,7 @@ public class Game extends ApplicationAdapter {
 	public static final Logger logger = new Logger("Uno-one");
 	public static GameCardService gameService;
 	public static List<PlayerView> playerViews;
+	protected DrawPileView drawPileView;
 	protected PackView pack;
 	protected Framerate framerate;
 	protected RotatingBackground background;
@@ -77,8 +79,11 @@ public class Game extends ApplicationAdapter {
 		playerViews = new ArrayList<>();
 		var players = gameService.getPlayerInformation();
 		for(int i = 0; i < players.size(); i++) {
-			playerViews.add(new PlayerView(stage, players.get(i), gameService, (i+1) * 150));
+			if(i == 0) playerViews.add(new PlayerView(stage, players.get(i), gameService, 50f));
+			else if (i == 1) playerViews.add(new PlayerView(stage, players.get(i), gameService, stage.getHeight() - 50));
 		}
+		
+		drawPileView = new DrawPileView(stage, gameService);
 		
 		parameter.size = 20;
 		pack = new PackView(stage, gameService, generator.generateFont(parameter));

@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayerView {
-    protected Integer height;
+    protected float height;
     protected final Stage stage;
     public HorizontalGroup horizontalGroup;
     protected List<Card> cards;
     protected final ImmutablePlayer player;
     protected final GameCardService service;
     
-    public PlayerView(Stage stage, ImmutablePlayer player, GameCardService service, Integer height){
+    public PlayerView(Stage stage, ImmutablePlayer player, GameCardService service, float height){
         horizontalGroup = new HorizontalGroup();
         stage.addActor(horizontalGroup);
         
