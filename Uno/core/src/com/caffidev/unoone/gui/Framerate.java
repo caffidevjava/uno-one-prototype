@@ -22,7 +22,6 @@ public class Framerate {
     public Framerate(BitmapFont font, Stage stage){
         label = new Label("0 fps", new Label.LabelStyle(font, Color.WHITE));
         label.setPosition(3f, stage.getHeight()-30f);
-        label.toFront();
         stage.addActor(label);
         lastTimeCounted = TimeUtils.millis();
         sinceChange = 0;

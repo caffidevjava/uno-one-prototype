@@ -34,7 +34,7 @@ public class Game extends ApplicationAdapter {
 	public static final Logger logger = new Logger("Uno-one");
 	public static GameCardService gameService;
 	public static List<PlayerView> playerViews;
-	protected DrawPileView drawPileView;
+	public static DrawPileView drawPileView;
 	protected PackView pack;
 	protected Framerate framerate;
 	protected RotatingBackground background;
@@ -83,6 +83,9 @@ public class Game extends ApplicationAdapter {
 			else if (i == 1) playerViews.add(new PlayerView(stage, players.get(i), gameService, stage.getHeight() - 50));
 		}
 		
+		for (PlayerView playerView : playerViews) {
+			playerView.update();
+		}
 		drawPileView = new DrawPileView(stage, gameService);
 		
 		parameter.size = 20;
@@ -104,10 +107,7 @@ public class Game extends ApplicationAdapter {
 		
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
-
-		for (PlayerView playerView : playerViews) {
-			playerView.update();
-		}
+		
 		
 		pack.update();
 		

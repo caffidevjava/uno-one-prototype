@@ -39,12 +39,15 @@ public class PlayerView {
         
         for (Card card : cards) {
             horizontalGroup.addActor(card);
+            card.linkPlayer(this, service);
         }
+        
         horizontalGroup.align(Align.center);
         horizontalGroup.setPosition(stage.getWidth()/2f, height);
     }
-    public void playCardFromHand(Card card){
-        throw new UnsupportedOperationException("not implemented yet");
+    
+    public ImmutablePlayer getPlayer() {
+        return player;
     }
     
     public void drawCard(){

@@ -9,9 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.caffidev.unoone.Game;
 import com.caffidev.unoone.GameCardService;
+import com.caffidev.unoone.ImmutablePlayer;
 import com.caffidev.unoone.Player;
 import com.caffidev.unoone.enums.CardColor;
 import com.caffidev.unoone.enums.CardType;
+import com.caffidev.unoone.gui.PlayerView;
 
 import java.security.Provider;
 import java.util.UUID;
@@ -39,21 +41,23 @@ public abstract class Card extends ImageButton {
     @Override
     public abstract String toString();
     
-    public void show(boolean show){
-        setDisabled(!show);
+    public void putOnDrawPile(Card card){
         clearListeners();
+        Game.drawPileView.putCard(card);
     }
     
-    public void linkPlayer(final Player player, final GameCardService service){
+    public void linkPlayer(final PlayerView player, final GameCardService service){
         addListener(new ClickListener(){
            public void clicked(InputEvent event, float x, float y){
-               playCard(player.getUuid(), Card.this, service);
+               playCard(player.getPlayer().getUuid(), Card.this, service);
+               player.update();
            } 
         });
     }
     
     private void playCard(UUID playerId, Card card, GameCardService service){
-        //Service.playCard?
+        service.playCard(playerId, card);
+        putOnDrawPile(card);
     }
     
     //Static i.e has instance

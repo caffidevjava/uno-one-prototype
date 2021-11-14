@@ -59,6 +59,7 @@ public class PackView {
                 for (PlayerView playerView : Game.playerViews) {
                     if(playerView.player.getUuid().toString().equals(service.getCurrentPlayer().getUuid().toString())){
                         playerView.drawCard();
+                        playerView.update();
                         return;
                     }
                 }
