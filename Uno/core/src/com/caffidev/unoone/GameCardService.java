@@ -40,6 +40,11 @@ public class GameCardService {
         return game.getPlayers().collect(Collectors.toList());
     }
     
+    public void playCard(UUID playerId, Card card){
+        Game.logger.info("Player "+playerId + " plays " + card.toString());
+        game.playCard(playerId, card);
+    }
+    
     public void drawCard(UUID playerId) {
         game.drawCard(playerId);
     } 
