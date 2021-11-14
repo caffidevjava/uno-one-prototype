@@ -57,8 +57,6 @@ public class PackView {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 for (PlayerView playerView : Game.playerViews) {
-                    Game.logger.debug(service.getCurrentPlayer().getUuid().toString());
-                    Game.logger.debug(playerView.player.getUuid().toString());
                     if(playerView.player.getUuid().toString().equals(service.getCurrentPlayer().getUuid().toString())){
                         playerView.drawCard();
                         return;

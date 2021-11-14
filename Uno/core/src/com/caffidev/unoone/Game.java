@@ -31,9 +31,9 @@ public class Game extends ApplicationAdapter {
 	private static boolean VSYNC = false;
 	
 	public static final Logger logger = new Logger("Uno-one");
-	protected PackView pack;
-	protected GameCardService gameService;
+	public static GameCardService gameService;
 	public static List<PlayerView> playerViews;
+	protected PackView pack;
 	protected Framerate framerate;
 	protected RotatingBackground background;
 	protected SpriteBatch batch;

@@ -31,11 +31,20 @@ public class CardGame extends Entity {
     public void drawCard(UUID playerId){
         if(getCurrentPlayer().getUuid().equals(playerId)) {
             Card drawnCard = drawCards(players.getPlayerByUuid(playerId), 1).get(0);
+            tryToPlayDrawnCard(playerId, drawnCard);
+        }
+        else {
+            //Not your turn
         }
     }
     
     public Integer getCardCount() {
         return pack.getCount();
+    }
+    
+    private void tryToPlayDrawnCard(UUID playerId, Card drawnCard){
+        // play card
+        players.next();
     }
     
     private List<Card> drawCards(Player player, int amount){

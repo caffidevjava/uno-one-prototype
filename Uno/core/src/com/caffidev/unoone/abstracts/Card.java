@@ -3,11 +3,18 @@ package com.caffidev.unoone.abstracts;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.caffidev.unoone.Game;
+import com.caffidev.unoone.GameCardService;
+import com.caffidev.unoone.Player;
 import com.caffidev.unoone.enums.CardColor;
 import com.caffidev.unoone.enums.CardType;
+
+import java.security.Provider;
+import java.util.UUID;
 
 /** A card model, that has its own Image */
 public abstract class Card extends ImageButton {
@@ -31,6 +38,23 @@ public abstract class Card extends ImageButton {
     
     @Override
     public abstract String toString();
+    
+    public void show(boolean show){
+        setDisabled(!show);
+        clearListeners();
+    }
+    
+    public void linkPlayer(final Player player, final GameCardService service){
+        addListener(new ClickListener(){
+           public void clicked(InputEvent event, float x, float y){
+               playCard(player.getUuid(), Card.this, service);
+           } 
+        });
+    }
+    
+    private void playCard(UUID playerId, Card card, GameCardService service){
+        //Service.playCard?
+    }
     
     //Static i.e has instance
     private static String getTexturePath(CardType type, CardColor color, Integer number){
