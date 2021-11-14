@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PlayerView {
+public class PlayerView{
     protected float height;
     protected final Stage stage;
     public HorizontalGroup horizontalGroup;

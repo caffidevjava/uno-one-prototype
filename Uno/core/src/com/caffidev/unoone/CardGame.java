@@ -98,6 +98,7 @@ public class CardGame extends Entity {
         return 0;
     }
     
+    
     public void drawCard(UUID playerId){
         if(getCurrentPlayer().getUuid().equals(playerId)) {
             Card drawnCard = drawCards(players.getPlayerByUuid(playerId), 1).get(0);
