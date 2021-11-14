@@ -50,7 +50,6 @@ public abstract class Card extends ImageButton {
         addListener(new ClickListener(){
            public void clicked(InputEvent event, float x, float y){
                playCard(player.getPlayer().getUuid(), Card.this, service);
-               player.update();
            } 
         });
     }
@@ -58,6 +57,9 @@ public abstract class Card extends ImageButton {
     private void playCard(UUID playerId, Card card, GameCardService service){
         service.playCard(playerId, card);
         putOnDrawPile(card);
+        for(PlayerView view : Game.playerViews) {
+            view.update();
+        }
     }
     
     //Static i.e has instance

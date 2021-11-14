@@ -41,7 +41,7 @@ public class GameCardService {
     }
     
     public void playCard(UUID playerId, Card card){
-        Game.logger.info("Player "+playerId + " plays " + card.toString());
+        Game.logger.info("Player "+ playerId + " plays " + card.toString());
         game.playCard(playerId, card);
     }
     

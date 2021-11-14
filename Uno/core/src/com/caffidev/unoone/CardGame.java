@@ -34,14 +34,37 @@ public class CardGame extends Entity {
     public ImmutablePlayer getCurrentPlayer() { return players.getCurrentPlayer().toImmutable();}
     
     public void playCard(UUID playerID, Card playedCard) {
-        // Validation of played card
-        switch(playedCard.getCardType()){
-            default -> {
-                players.getCurrentPlayer().removePlayedCard(playedCard);
-                discard(playedCard);
-                // Uno?
-                // Winner
-                // It's own acceptPlayedCard func?
+        if(getCurrentPlayer().getUuid().equals(playerID)) {
+            // Validation of played card
+            players.getCurrentPlayer().removePlayedCard(playedCard);
+            discard(playedCard);
+            // Uno?
+            // Winner
+            // It's own acceptPlayedCard func?
+            switch(playedCard.getCardType()) {
+                case NUMBER, WILD_COLOR -> {
+                    players.next();
+                }
+                case SKIP -> {
+                    players.next();
+                    players.next();
+                }
+                case REVERSE -> {
+                    reverse();
+                }
+                case PLUS_TWO -> {
+                    players.next();
+                    drawTwoCards(players.getCurrentPlayer());
+                    players.next();
+                }
+                case WILD_PLUS_FOUR -> {
+                    players.next();
+                    drawFourCards(players.getCurrentPlayer());
+                    players.next();
+                }
+                default -> {
+                    throw new UnsupportedOperationException("Card always has a type, looks like someone is cheating");
+                }
             }
         }
     }
@@ -52,7 +75,7 @@ public class CardGame extends Entity {
             tryToPlayDrawnCard(playerId, drawnCard);
         }
         else {
-            //Not your turn
+            //Not your turn, works only in multiplayer
         }
     }
     
@@ -86,8 +109,6 @@ public class CardGame extends Entity {
             }
         }
     }
-    
-    
     private void discard(Card card) {
         drawPile.putCard(card);
     }

@@ -16,9 +16,11 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.caffidev.unoone.gui.DrawPileView;
 import com.caffidev.unoone.gui.Framerate;
+import com.caffidev.unoone.gui.InfoView;
 import com.caffidev.unoone.gui.PackView;
 import com.caffidev.unoone.gui.PlayerView;
 import com.caffidev.unoone.gui.RotatingBackground;
+import com.sun.source.tree.ReturnTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class Game extends ApplicationAdapter {
 	public static List<PlayerView> playerViews;
 	public static DrawPileView drawPileView;
 	protected PackView pack;
+	protected InfoView info;
 	protected Framerate framerate;
 	protected RotatingBackground background;
 	protected SpriteBatch batch;
@@ -74,7 +77,7 @@ public class Game extends ApplicationAdapter {
 		logger.setLevel(Logger.DEBUG);
 		logger.debug("Logger was instantiated.");
 		
-		gameService = new GameCardService("Hello", "World");
+		gameService = new GameCardService("Player 1", "Player 2");
 		
 		playerViews = new ArrayList<>();
 		var players = gameService.getPlayerInformation();
@@ -86,10 +89,12 @@ public class Game extends ApplicationAdapter {
 		for (PlayerView playerView : playerViews) {
 			playerView.update();
 		}
+		
 		drawPileView = new DrawPileView(stage, gameService);
 		
 		parameter.size = 20;
 		pack = new PackView(stage, gameService, generator.generateFont(parameter));
+		info = new InfoView(stage, gameService, generator.generateFont(parameter));
 	}
 	
 	@Override
@@ -108,8 +113,8 @@ public class Game extends ApplicationAdapter {
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 		
-		
 		pack.update();
+		info.update();
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){ Gdx.app.exit();}
 		if(Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
