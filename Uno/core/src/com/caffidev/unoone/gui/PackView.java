@@ -60,6 +60,7 @@ public class PackView {
                     if(playerView.player.getUuid().toString().equals(service.getCurrentPlayer().getUuid().toString())){
                         playerView.drawCard();
                         playerView.update();
+                        Game.infoView.updateTurn();
                         return;
                     }
                 }

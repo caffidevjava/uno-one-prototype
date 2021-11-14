@@ -13,6 +13,7 @@ import com.caffidev.unoone.ImmutablePlayer;
 import com.caffidev.unoone.Player;
 import com.caffidev.unoone.enums.CardColor;
 import com.caffidev.unoone.enums.CardType;
+import com.caffidev.unoone.gui.InfoView;
 import com.caffidev.unoone.gui.PlayerView;
 
 import java.security.Provider;
@@ -55,11 +56,15 @@ public abstract class Card extends ImageButton {
     }
     
     private void playCard(UUID playerId, Card card, GameCardService service){
-        service.playCard(playerId, card);
+        var code = service.playCard(playerId, card);
+        Game.infoView.updatePlayCardError(code);
+        
         putOnDrawPile(card);
+        
         for(PlayerView view : Game.playerViews) {
             view.update();
         }
+        Game.infoView.updateTurn();
     }
     
     //Static i.e has instance

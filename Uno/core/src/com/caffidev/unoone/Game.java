@@ -30,15 +30,16 @@ public class Game extends ApplicationAdapter {
 	private static final float MIN_GAME_HEIGHT = 540;
 	private static final float MAX_GAME_WIDTH = 1280;
 	private static final float MAX_GAME_HEIGHT = 720;
-	private static boolean IS_DEBUG = true;
-	private static boolean VSYNC = false;
+	private static boolean IS_DEBUG = false;
+	private static boolean VSYNC = true;
 	
 	public static final Logger logger = new Logger("Uno-one");
 	public static GameCardService gameService;
 	public static List<PlayerView> playerViews;
 	public static DrawPileView drawPileView;
+	public static InfoView infoView;
+	
 	protected PackView pack;
-	protected InfoView info;
 	protected Framerate framerate;
 	protected RotatingBackground background;
 	protected SpriteBatch batch;
@@ -71,7 +72,6 @@ public class Game extends ApplicationAdapter {
 		//Actors
 		background = new RotatingBackground(new TextureRegion(new Texture("background.jpg")), 5f, stage);
 		stage.addActor(background);
-		framerate = new Framerate(generator.generateFont(parameter), stage);
 		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		logger.setLevel(Logger.DEBUG);
@@ -89,12 +89,16 @@ public class Game extends ApplicationAdapter {
 		for (PlayerView playerView : playerViews) {
 			playerView.update();
 		}
+
+		framerate = new Framerate(generator.generateFont(parameter), stage);
 		
 		drawPileView = new DrawPileView(stage, gameService);
 		
 		parameter.size = 20;
 		pack = new PackView(stage, gameService, generator.generateFont(parameter));
-		info = new InfoView(stage, gameService, generator.generateFont(parameter));
+		infoView = new InfoView(stage, gameService, generator.generateFont(parameter));
+	
+		infoView.updateTurn();
 	}
 	
 	@Override
@@ -113,8 +117,11 @@ public class Game extends ApplicationAdapter {
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 		
+		if(infoView.sinceChange != -1) {
+			infoView.updateError();
+		}
+		
 		pack.update();
-		info.update();
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){ Gdx.app.exit();}
 		if(Gdx.input.isKeyJustPressed(Input.Keys.F3)) {

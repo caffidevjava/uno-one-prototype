@@ -39,7 +39,13 @@ public class GameCardService {
     public List<ImmutablePlayer> getPlayerInformation(){
         return game.getPlayers().collect(Collectors.toList());
     }
-    
+
+    /** Returns -4, if unknown error
+     *  Returns -3, if card is invalid 
+     *  Returns -2, if owner of playerID is not current player
+     *  Returns -1, if user does not have card
+     *  Returns zero, if successful
+     */
     public Integer playCard(UUID playerId, Card card){
         Game.logger.info("Player "+ playerId + " plays " + card.toString());
         return game.playCard(playerId, card);
