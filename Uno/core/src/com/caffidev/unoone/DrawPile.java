@@ -29,10 +29,13 @@ public class DrawPile {
     
     public int size() { return cards.size();}
     
+    /** Automatically deletes all cards (apart from one) from drawpile, and gives it back shuffled */
     public List<Card> reshuffle(){
+        Card card = cards.pop();     
         Collections.shuffle(cards);
         List<Card> givenCards = cards;
         cards = new Stack<>();
+        cards.add(card);
         return givenCards;
     }
 }

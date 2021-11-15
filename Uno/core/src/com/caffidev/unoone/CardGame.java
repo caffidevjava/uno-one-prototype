@@ -5,8 +5,11 @@ import com.caffidev.unoone.abstracts.Entity;
 import com.caffidev.unoone.enums.CardType;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class CardGame extends Entity {
@@ -67,6 +70,7 @@ public class CardGame extends Entity {
                     acceptPlayedCard(playedCard);
                     
                     reverse();
+                    players.next();
                 }
                 case PLUS_TWO -> {
                     if(!checkActionCard(playedCard)) return -3;
@@ -97,7 +101,7 @@ public class CardGame extends Entity {
         }
         return 0;
     }
-
+    
     /**
      * Returns -2 when unknown error
      * Returns -1 when not playerId's turn
@@ -116,7 +120,7 @@ public class CardGame extends Entity {
                 return -1;
             }
         } catch (Exception e){
-            Game.logger.error("Unknown exception: "+e.getLocalizedMessage());
+            Game.logger.error("Unknown exception: "+e.toString());
             return -2;
         }
     }
@@ -139,26 +143,57 @@ public class CardGame extends Entity {
             }
             case REVERSE -> {
                 discard(card);
-                reverse();
+                reverse(); //mention bug
             }
             case PLUS_TWO -> {
                 discard(card);
                 drawTwoCards(players.getCurrentPlayer());
             }
             case WILD_PLUS_FOUR -> {
-                // todo: make a new drawpile
-                throw new UnsupportedOperationException("not implemented");
+                //Makes new pack
+                Game.logger.info("+4 card can't be first on a drawpile, recreating it");
+                recreateCardPack(card);
             }
         }
     }
+    
     private void discard(Card card) {
         drawPile.putCard(card);
     }
+
+    private void recreateCardPack(){
+        if(drawPile.size() == 0) {
+            throw new IllegalStateException("Not enough cards in draw pile to recreate card pack");
+        }
+        
+        var cards = new ArrayList<Card>();
+        cards.addAll(drawPile.reshuffle());
+        
+        pack = new CardPack(cards);
+        
+    }
     
+    private void recreateCardPack(Card card){
+        if(pack.getCount() == 0) {
+            throw new IllegalStateException("Not enough cards in card pack to recreate card pack");
+        }
+        drawPile = new DrawPile();
+        
+        var oldCards = new ArrayList<Card>();
+        oldCards.add(card);
+        Integer count = pack.getCount();
+        for (int i = 0; i < count; i++) {
+            oldCards.add(pack.drawCard());
+        }
+        
+        Collections.shuffle(oldCards);
+        pack = new CardPack(oldCards);
+        
+        startDrawPile();
+    }
     
     private void reverse() {
         players.reverseDirection();
-        players.next();
     }
     
     private void tryToPlayDrawnCard(UUID playerId, Card drawnCard){
@@ -210,6 +245,11 @@ public class CardGame extends Entity {
     }
     
     private List<Card> drawCards(Player player, int amount){
+        if(amount >= pack.getCount()) {
+            Game.logger.info("Recreating card pack due to it's end, needed "+
+                    amount + " cards, pack contains "+pack.getCount() + " cards");
+            recreateCardPack();
+        }
         // Cards that we will give away
         List<Card> drawnCards = new ArrayList<Card>();
         for (int i = 0; i < amount; i++) {
