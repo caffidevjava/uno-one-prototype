@@ -69,7 +69,7 @@ public class CardGame extends Entity {
                     reverse();
                 }
                 case PLUS_TWO -> {
-                    if(checkActionCard(playedCard)) return -3;
+                    if(!checkActionCard(playedCard)) return -3;
                     acceptPlayedCard(playedCard);
                     
                     players.next();
@@ -77,13 +77,13 @@ public class CardGame extends Entity {
                     players.next();
                 }
                 case WILD_COLOR -> {
-                    if(checkWildCard(playedCard)) return -3;
+                    if(!checkWildCard(playedCard)) return -3;
                     acceptPlayedCard(playedCard);
                     
                     players.next();
                 }
                 case WILD_PLUS_FOUR -> {
-                    if(checkWildCard(playedCard)) return -3;
+                    if(!checkWildCard(playedCard)) return -3;
                     acceptPlayedCard(playedCard);
                     
                     players.next();
@@ -97,15 +97,27 @@ public class CardGame extends Entity {
         }
         return 0;
     }
-    
-    
-    public void drawCard(UUID playerId){
-        if(getCurrentPlayer().getUuid().equals(playerId)) {
-            Card drawnCard = drawCards(players.getPlayerByUuid(playerId), 1).get(0);
-            tryToPlayDrawnCard(playerId, drawnCard);
-        }
-        else {
-            //Not your turn, works only in multiplayer
+
+    /**
+     * Returns -2 when unknown error
+     * Returns -1 when not playerId's turn
+     * Returns zero if successful
+     * @param playerId
+     * @return
+     */
+    public Integer drawCard(UUID playerId){
+        try {
+            if (getCurrentPlayer().getUuid().equals(playerId)) {
+                Card drawnCard = drawCards(players.getPlayerByUuid(playerId), 1).get(0);
+                tryToPlayDrawnCard(playerId, drawnCard);
+                return 0;
+            } else {
+                //Not your turn, works only in multiplayer
+                return -1;
+            }
+        } catch (Exception e){
+            Game.logger.error("Unknown exception: "+e.getLocalizedMessage());
+            return -2;
         }
     }
     

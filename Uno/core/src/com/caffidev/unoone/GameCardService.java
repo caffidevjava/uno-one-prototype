@@ -55,8 +55,8 @@ public class GameCardService {
         return game.getTopCard();
     }
     
-    public void drawCard(UUID playerId) {
-        game.drawCard(playerId);
+    public Integer drawCard(UUID playerId) {
+        return game.drawCard(playerId);
     } 
     
     public Integer getCardCount() { return game.getCardCount();}

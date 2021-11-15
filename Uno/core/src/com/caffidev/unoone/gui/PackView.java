@@ -58,7 +58,7 @@ public class PackView {
             public void clicked(InputEvent event, float x, float y){
                 for (PlayerView playerView : Game.playerViews) {
                     if(playerView.player.getUuid().toString().equals(service.getCurrentPlayer().getUuid().toString())){
-                        playerView.drawCard();
+                        Game.infoView.updateDrawCardError(playerView.drawCard());
                         playerView.update();
                         Game.infoView.updateTurn();
                         return;

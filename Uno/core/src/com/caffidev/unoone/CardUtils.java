@@ -8,6 +8,7 @@ import com.caffidev.unoone.enums.CardType;
 import java.util.UUID;
 
 public class CardUtils {
+    
     /** Returns -2, if owner of playerID is not current player
      *  Returns -1, if user does not have card
      *  Returns zero, if successful
@@ -65,7 +66,7 @@ public class CardUtils {
     }
 
     public static boolean isValidWildCard(Card playedCard) {
-        return playedCard.getColor() == null;
+        return playedCard.getCardColor() == null;
     }
 
     public static boolean isWildCard(Card card) {

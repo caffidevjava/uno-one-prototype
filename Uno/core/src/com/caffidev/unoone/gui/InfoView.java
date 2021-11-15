@@ -58,8 +58,12 @@ public class InfoView {
     }
     
     public void updateDrawCardError(Integer errorCode){
-        //Draw error receive code
+        switch (errorCode) {
+            case -2 -> { updateError("Unknown error.");}
+            case -1 -> { updateError("It's not your turn.");}
+        }
     }
+    
     public void updateError(){
         long delta = TimeUtils.timeSinceMillis(lastTimeCounted);
         lastTimeCounted = TimeUtils.millis();

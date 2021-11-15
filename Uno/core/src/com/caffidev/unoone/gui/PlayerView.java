@@ -50,7 +50,7 @@ public class PlayerView{
         return player;
     }
     
-    public void drawCard(){
-        service.drawCard(player.getUuid());
+    public Integer drawCard(){
+        return service.drawCard(player.getUuid());
     }
 }
