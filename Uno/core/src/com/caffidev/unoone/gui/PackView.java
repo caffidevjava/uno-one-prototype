@@ -26,7 +26,7 @@ public class PackView {
                 new TextureRegionDrawable(
                         new Texture(Gdx.files.internal("back.png"))));
         cardButton.align(Align.center);
-        cardButton.setPosition(0, stage.getHeight() / 2f);
+        cardButton.setPosition(stage.getWidth() / 4f, stage.getHeight() / 2f - cardButton.getHeight() /2f);
         stage.addActor(cardButton);
         
         amountLabel = new Label("fallback", new Label.LabelStyle(font, Color.WHITE));
