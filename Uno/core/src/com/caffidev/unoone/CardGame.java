@@ -3,6 +3,7 @@ package com.caffidev.unoone;
 import com.caffidev.unoone.abstracts.Card;
 import com.caffidev.unoone.abstracts.Entity;
 import com.caffidev.unoone.enums.CardType;
+import com.caffidev.unoone.gui.DrawPileView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +18,8 @@ public class CardGame extends Entity {
     
     private CardPack pack;
     private DrawPile drawPile;
+    private ImmutablePlayer winner;
+    private Card lastDrawnCard;
     
     public CardGame(PlayerRoundDirector players, CardPack pack){
         super();
@@ -27,7 +30,6 @@ public class CardGame extends Entity {
         startDrawPile();
     }
     
-    
     public Stream<ImmutablePlayer> getPlayers() {
         return players.stream().map(Player::toImmutable);
     }
@@ -36,76 +38,22 @@ public class CardGame extends Entity {
     }
     
     public ImmutablePlayer getCurrentPlayer() { return players.getCurrentPlayer().toImmutable();}
-
-    /** Returns -4, if unknown error
-     *  Returns -3, if card is invalid 
-     *  Returns -2, if owner of playerID is not current player
-     *  Returns -1, if user does not have card
+    
+    public Card getLastDrawnCard() { return lastDrawnCard; }
+    /** Returns -4, if unknown error\n
+     *  Returns -3, if card is invalid\n
+     *  Returns -2, if owner of playerID is not current player\n
+     *  Returns -1, if user does not have card\n
      *  Returns zero, if successful
      */
-    public Integer playCard(UUID playerID, Card playedCard) {
-        var currentPlayer = players.getCurrentPlayer();
-        int answer = CardUtils.validatePlayedCard(playerID, currentPlayer, playedCard);
-        if(answer != 0) {
-            return answer;
-        }
-        
-        if(getCurrentPlayer().getUuid().equals(playerID)) {
-            switch(playedCard.getCardType()) {
-                case NUMBER-> {
-                    if(!checkNumberCard(playedCard)) return -3;
-                    acceptPlayedCard(playedCard);
-                    
-                    players.next();
-                }
-                case SKIP -> {
-                    if(!checkActionCard(playedCard)) return -3;
-                    acceptPlayedCard(playedCard);
-                    
-                    players.next();
-                    players.next();
-                }
-                case REVERSE -> {
-                    if(!checkActionCard(playedCard)) return -3;
-                    acceptPlayedCard(playedCard);
-                    
-                    reverse();
-                    players.next();
-                }
-                case PLUS_TWO -> {
-                    if(!checkActionCard(playedCard)) return -3;
-                    acceptPlayedCard(playedCard);
-                    
-                    players.next();
-                    drawTwoCards(players.getCurrentPlayer());
-                    players.next();
-                }
-                case WILD_COLOR -> {
-                    if(!checkWildCard(playedCard)) return -3;
-                    acceptPlayedCard(playedCard);
-                    
-                    players.next();
-                }
-                case WILD_PLUS_FOUR -> {
-                    if(!checkWildCard(playedCard)) return -3;
-                    acceptPlayedCard(playedCard);
-                    
-                    players.next();
-                    drawFourCards(players.getCurrentPlayer());
-                    players.next();
-                }
-                default -> {
-                    return -4;
-                }
-            }
-        }
-        return 0;
-    }
+    public Integer playCard(UUID playerID, Card playedCard)
+    {   return playCard(playerID, playedCard, false);}
     
     /**
      * Returns -2 when unknown error
      * Returns -1 when not playerId's turn
      * Returns zero if successful
+     * Returns 1 if also card was drawn
      * @param playerId
      * @return
      */
@@ -113,8 +61,7 @@ public class CardGame extends Entity {
         try {
             if (getCurrentPlayer().getUuid().equals(playerId)) {
                 Card drawnCard = drawCards(players.getPlayerByUuid(playerId), 1).get(0);
-                tryToPlayDrawnCard(playerId, drawnCard);
-                return 0;
+                return tryToPlayDrawnCard(playerId, drawnCard);
             } else {
                 //Not your turn, works only in multiplayer
                 return -1;
@@ -131,6 +78,74 @@ public class CardGame extends Entity {
     
     public Card getTopCard(){
         return drawPile.lastCard();
+    }
+    
+    public boolean isOver() { return winner != null; }
+    public ImmutablePlayer getWinner() { return winner; }
+
+    /** Returns -4, if unknown error
+     *  Returns -3, if card is invalid 
+     *  Returns -2, if owner of playerID is not current player
+     *  Returns -1, if user does not have card
+     *  Returns zero, if successful
+     */
+    private Integer playCard(UUID playerID, Card playedCard, boolean ignoreTurnRules) {
+        var currentPlayer = players.getCurrentPlayer();
+        int answer = CardUtils.validatePlayedCard(playerID, currentPlayer, playedCard);
+        if(ignoreTurnRules ? answer != 3 && answer != 0 : answer != 0) {
+            return answer;
+        }
+
+        if(getCurrentPlayer().getUuid().equals(playerID)) {
+            switch(playedCard.getCardType()) {
+                case NUMBER-> {
+                    if(!checkNumberCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+
+                    players.next();
+                }
+                case SKIP -> {
+                    if(!checkActionCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+
+                    players.next();
+                    players.next();
+                }
+                case REVERSE -> {
+                    if(!checkActionCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+
+                    reverse();
+                    players.next();
+                }
+                case PLUS_TWO -> {
+                    if(!checkActionCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+
+                    players.next();
+                    drawTwoCards(players.getCurrentPlayer());
+                    players.next();
+                }
+                case WILD_COLOR -> {
+                    if(!checkWildCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+
+                    players.next();
+                }
+                case WILD_PLUS_FOUR -> {
+                    if(!checkWildCard(playedCard)) return -3;
+                    acceptPlayedCard(playedCard);
+
+                    players.next();
+                    drawFourCards(players.getCurrentPlayer());
+                    players.next();
+                }
+                default -> {
+                    return -4;
+                }
+            }
+        }
+        return 0;
     }
     
     private void startDrawPile() {
@@ -195,15 +210,43 @@ public class CardGame extends Entity {
     private void reverse() {
         players.reverseDirection();
     }
-    
-    private void tryToPlayDrawnCard(UUID playerId, Card drawnCard){
+
+    /**
+     * Tries to play drawn card. If not successful, returns zero. 1 on success. Changes the turn.
+     * @param playerId
+     * @param drawnCard
+     * @return Success
+     */
+    private Integer tryToPlayDrawnCard(UUID playerId, Card drawnCard){
         // play card
+        var code = playCard(playerId, drawnCard, true);
         players.next();
+        
+        if (code == 0) {
+            Game.logger.info("Player " + playerId + " played with a drawn card " + drawnCard);
+            lastDrawnCard = drawnCard;
+            return 1;
+        }
+        lastDrawnCard = null;
+        return 0;
+    }
+    
+    private void playerWon(ImmutablePlayer player){
+        // Congrats
+        winner = player;
+        Game.logger.info("Player "+ player.getName() + " with uuid " +
+                player.getUuid() + " has won the game!");
     }
     
     private void acceptPlayedCard(Card card){
-        players.getCurrentPlayer().removePlayedCard(card);
+        var currentPlayer = players.getCurrentPlayer();
+        currentPlayer.removePlayedCard(card);
         discard(card);
+        
+        // Checking for a winner
+        var cardsRemaining = getCurrentPlayer().getTotalCards();
+        Game.logger.info(String.valueOf(cardsRemaining));
+        if(cardsRemaining == 0) playerWon(getCurrentPlayer());
     }
     
     private Boolean checkNumberCard(Card playedCard){

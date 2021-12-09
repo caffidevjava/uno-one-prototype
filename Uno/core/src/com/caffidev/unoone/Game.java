@@ -150,4 +150,8 @@ public class Game extends ApplicationAdapter {
 		stage.dispose();
 		generator.dispose();
 	}
+	
+	public static void winnerFound(){
+		
+	}
 }

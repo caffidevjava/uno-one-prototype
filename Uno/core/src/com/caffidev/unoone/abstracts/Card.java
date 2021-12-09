@@ -9,14 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.caffidev.unoone.Game;
 import com.caffidev.unoone.GameCardService;
-import com.caffidev.unoone.ImmutablePlayer;
-import com.caffidev.unoone.Player;
 import com.caffidev.unoone.enums.CardColor;
 import com.caffidev.unoone.enums.CardType;
-import com.caffidev.unoone.gui.InfoView;
 import com.caffidev.unoone.gui.PlayerView;
 
-import java.security.Provider;
 import java.util.UUID;
 
 /** A card model, that has its own Image */
@@ -24,7 +20,7 @@ public abstract class Card extends ImageButton {
     private final CardType cardType;
     private final CardColor cardColor;
     private final Integer cardNumber; //if it's unique, has -1 number;
-
+    
     public Card(CardType type, CardColor color, Integer number){
         super(new TextureRegionDrawable(new TextureRegion(new Texture(getTexturePath(type,color,number)))));
         getStyle().imageDisabled = new TextureRegionDrawable(new TextureRegion(new Texture("back.png")));
@@ -42,8 +38,10 @@ public abstract class Card extends ImageButton {
     @Override
     public abstract String toString();
     
+    
+    // todo: bad decision, very bad solution
     public void putOnDrawPile(Card card){
-        clearListeners();
+        this.clearListeners();
         Game.drawPileView.putCard(card);
     }
     
@@ -58,7 +56,10 @@ public abstract class Card extends ImageButton {
     private void playCard(UUID playerId, Card card, GameCardService service){
         var code = service.playCard(playerId, card);
         Game.infoView.updatePlayCardError(code);
-        if(code == 0) Game.soundService.playCardSound.play();
+        if(code == 0) {
+            Game.soundService.cardPlaySound.play();
+            if(service.gameIsOver()) Game.winnerFound();
+        }
         putOnDrawPile(card);
         
         for(PlayerView view : Game.playerViews) {

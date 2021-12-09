@@ -4,27 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.VertexBufferObjectSubData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Logger;
 import com.caffidev.unoone.Game;
 import com.caffidev.unoone.GameCardService;
-import com.caffidev.unoone.ImmutablePlayer;
-import com.caffidev.unoone.Player;
-import com.caffidev.unoone.SoundService;
-import com.caffidev.unoone.abstracts.Card;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class PackView {
     protected Stage stage;
@@ -61,7 +49,16 @@ public class PackView {
                     if(playerView.player.getUuid().toString().equals(service.getCurrentPlayer().getUuid().toString())){
                         Integer code = playerView.drawCard();
                         Game.infoView.updateDrawCardError(code);
-                        if(code == 0) Game.soundService.drawCardSound.play();
+                        
+                        if(code == 0 || code == 1) Game.soundService.cardDrawSound.play();
+                        if(code == 1) {
+                            var lastDrawnCard = Game.gameService.getLastDrawnCard();
+                            
+                            if(lastDrawnCard != null) {
+                                Game.drawPileView.putCard(lastDrawnCard);
+                                Game.soundService.cardPlaySound.play();
+                            }
+                        }
                         
                         playerView.update();
                         Game.infoView.updateTurn();

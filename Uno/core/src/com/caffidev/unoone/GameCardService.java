@@ -36,6 +36,8 @@ public class GameCardService {
         return game.getCurrentPlayer();
     }
     
+    public Card getLastDrawnCard() { return game.getLastDrawnCard();}
+    
     public List<ImmutablePlayer> getPlayerInformation(){
         return game.getPlayers().collect(Collectors.toList());
     }
@@ -64,6 +66,10 @@ public class GameCardService {
     public Stream<Card> getHandCards(UUID playerId) {
         return game.getHandCards(playerId);
     }
+    
+    public boolean gameIsOver() { return game.isOver(); }
+    
+    public ImmutablePlayer getWinner() { return game.getWinner();}
     
     private void logCreationOfGame() {
         Game.logger.info("Game was created successfully.");

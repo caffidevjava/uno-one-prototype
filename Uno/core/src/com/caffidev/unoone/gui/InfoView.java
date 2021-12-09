@@ -61,6 +61,10 @@ public class InfoView {
         switch (errorCode) {
             case -2 -> { updateError("Unknown error.");}
             case -1 -> { updateError("It's not your turn.");}
+            case 1 -> {
+                //not error, todo: place it in another place
+                updateError("Played drawn card!");
+            }
         }
     }
     
@@ -71,6 +75,7 @@ public class InfoView {
         
         if(sinceChange >= 1000) {
             errorLabel.setVisible(false);
+            
             sinceChange = -1;
         } 
     }
