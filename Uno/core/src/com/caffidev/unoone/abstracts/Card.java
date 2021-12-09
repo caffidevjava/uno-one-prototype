@@ -58,7 +58,7 @@ public abstract class Card extends ImageButton {
     private void playCard(UUID playerId, Card card, GameCardService service){
         var code = service.playCard(playerId, card);
         Game.infoView.updatePlayCardError(code);
-        
+        if(code == 0) Game.soundService.playCardSound.play();
         putOnDrawPile(card);
         
         for(PlayerView view : Game.playerViews) {

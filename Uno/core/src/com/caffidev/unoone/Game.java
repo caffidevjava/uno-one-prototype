@@ -35,6 +35,8 @@ public class Game extends ApplicationAdapter {
 	
 	public static final Logger logger = new Logger("Uno-one");
 	public static GameCardService gameService;
+	public static SoundService soundService;
+	
 	public static List<PlayerView> playerViews;
 	public static DrawPileView drawPileView;
 	public static InfoView infoView;
@@ -46,6 +48,7 @@ public class Game extends ApplicationAdapter {
 	
 	protected FreeTypeFontGenerator generator;
 	protected FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+	
 	Stage stage;
 	Viewport viewport;
 	
@@ -78,6 +81,7 @@ public class Game extends ApplicationAdapter {
 		logger.debug("Logger was instantiated.");
 		
 		gameService = new GameCardService("Player 1", "Player 2");
+		soundService = new SoundService();
 		
 		playerViews = new ArrayList<>();
 		var players = gameService.getPlayerInformation();

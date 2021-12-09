@@ -19,6 +19,7 @@ import com.caffidev.unoone.Game;
 import com.caffidev.unoone.GameCardService;
 import com.caffidev.unoone.ImmutablePlayer;
 import com.caffidev.unoone.Player;
+import com.caffidev.unoone.SoundService;
 import com.caffidev.unoone.abstracts.Card;
 
 import java.util.ArrayList;
@@ -58,7 +59,10 @@ public class PackView {
             public void clicked(InputEvent event, float x, float y){
                 for (PlayerView playerView : Game.playerViews) {
                     if(playerView.player.getUuid().toString().equals(service.getCurrentPlayer().getUuid().toString())){
-                        Game.infoView.updateDrawCardError(playerView.drawCard());
+                        Integer code = playerView.drawCard();
+                        Game.infoView.updateDrawCardError(code);
+                        if(code == 0) Game.soundService.drawCardSound.play();
+                        
                         playerView.update();
                         Game.infoView.updateTurn();
                         return;
