@@ -30,6 +30,7 @@ public class Game extends ApplicationAdapter {
 	private static final float MIN_GAME_HEIGHT = 540;
 	private static final float MAX_GAME_WIDTH = 1280;
 	private static final float MAX_GAME_HEIGHT = 720;
+	
 	private static boolean IS_DEBUG = false;
 	private static boolean VSYNC = true;
 	
@@ -85,9 +86,11 @@ public class Game extends ApplicationAdapter {
 		
 		playerViews = new ArrayList<>();
 		var players = gameService.getPlayerInformation();
+		
+		// Player view adaptation
 		for(int i = 0; i < players.size(); i++) {
-			if(i == 0) playerViews.add(new PlayerView(stage, players.get(i), gameService, 50f));
-			else if (i == 1) playerViews.add(new PlayerView(stage, players.get(i), gameService, stage.getHeight() - 50));
+			if(i == 0) playerViews.add(new PlayerView(stage, players.get(i), gameService, stage.getWidth() / 2f, 50f, 0));
+			else if (i == 1) playerViews.add(new PlayerView(stage, players.get(i), gameService, stage.getWidth() / 2f, stage.getHeight() - 50f, 180f));
 		}
 		
 		for (PlayerView playerView : playerViews) {

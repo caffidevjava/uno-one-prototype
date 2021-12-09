@@ -12,14 +12,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayerView{
-    protected float height;
-    protected final Stage stage;
+    public float VIEW_WIDTH;
     public HorizontalGroup horizontalGroup;
+    protected final Stage stage;
+    
     protected List<Card> cards;
     protected final ImmutablePlayer player;
+    
     protected final GameCardService service;
     
-    public PlayerView(Stage stage, ImmutablePlayer player, GameCardService service, float height){
+    protected float width;
+    protected float height;
+    protected float rotationDeg;
+    
+    public PlayerView(Stage stage, ImmutablePlayer player, GameCardService service, float width, float height, float rotationDeg){
         horizontalGroup = new HorizontalGroup();
         stage.addActor(horizontalGroup);
         
@@ -28,11 +34,17 @@ public class PlayerView{
         this.service = service;
         
         this.stage = stage;
+        
+        this.width = width;
         this.height = height;
+        this.rotationDeg = rotationDeg;
+        
+        VIEW_WIDTH = stage.getWidth() / 2f;
     }
     
     public void update() {
         horizontalGroup.clear();
+        
         
         cards.clear();
         cards = service.getHandCards(player.getUuid()).collect(Collectors.toList());
@@ -42,8 +54,19 @@ public class PlayerView{
             card.linkPlayer(this, service);
         }
         
-        horizontalGroup.align(Align.center);
-        horizontalGroup.setPosition(stage.getWidth()/2f, height);
+        //todo: fix alignment bug
+        horizontalGroup.setPosition(width, height, Align.center);
+        horizontalGroup.setRotation(rotationDeg);
+        // horizontalGroup.getChild(1). we can get style && hide.cards
+        //horizontalGroup.wrap(true);
+        //horizontalGroup.setWidth(SCREEN_SPACE);
+        //horizontalGroup.setHeight(horizontalGroup.getChild(0).getHeight());
+        var space = (VIEW_WIDTH - (horizontalGroup.getChildren().size * horizontalGroup.getChild(0).getWidth())) / (horizontalGroup.getChildren().size - 1);
+        if (horizontalGroup.getChildren().size > 0 && space <= 0) {
+            horizontalGroup.space(space);
+            //horizontalGroup.setOrigin((horizontalGroup.getChild(0).getWidth() * horizontalGroup.getChildren().size) / 2f, horizontalGroup.getHeight()/2f);
+        }
+        else horizontalGroup.space(0);
     }
     
     public ImmutablePlayer getPlayer() {
